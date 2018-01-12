@@ -59,14 +59,14 @@ train = train_onehotencoder.fit_transform(train).toarray()
 test_onehotencoder = OneHotEncoder(categorical_features = [4])
 test = test_onehotencoder.fit_transform(test).toarray()
 
-train = train.drop(['5'], axis = 1)
-test = test.drop(['4'], axis = 1)
+train = np.delete(train, 5, 1)
+test = np.delete(test, 5, 1)
 
 
-X_train = train.iloc[:, 1:7].values
-y_train = train.iloc[:, 0].values
+X_train = train[:, 1:9]
+y_train = train[:, 0]
 
-X_test = test.values
+X_test = test
 
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
@@ -88,8 +88,8 @@ from keras.layers import Dropout
 
 def build_classifier(optimizer):
     classifier = Sequential()
-    classifier.add(Dense(units = 4, kernel_initializer = 'uniform', activation = 'relu', input_dim = 6))
-    classifier.add(Dense(units = 4, kernel_initializer = 'uniform', activation = 'relu'))
+    classifier.add(Dense(units = 5, kernel_initializer = 'uniform', activation = 'relu', input_dim = 8))
+    classifier.add(Dense(units = 5, kernel_initializer = 'uniform', activation = 'relu'))
     classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
     classifier.compile(optimizer = optimizer, loss = 'binary_crossentropy', metrics = ['accuracy'])
     return classifier
