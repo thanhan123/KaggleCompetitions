@@ -34,8 +34,8 @@ for dataset in full_data:
 for dataset in full_data:
     dataset['Fare'] = dataset['Fare'].fillna(train['Fare'].median())
 
-#for dataset in full_data:
-#    dataset['Embarked'] = dataset['Embarked'].fillna('S')
+for dataset in full_data:
+    dataset['Embarked'] = dataset['Embarked'].fillna('S')
     
 # Feature selection
     
@@ -56,7 +56,7 @@ X[:, 1] = labelencoder_sex.fit_transform(X[:, 1])
 X_test[:, 1] = labelencoder_sex.fit_transform(X_test[:, 1])
 
 labelencoder_embark = LabelEncoder()
-X[:, 4] = labelencoder_embark.fit_transform(X[:, 5])
+X[:, 4] = labelencoder_embark.fit_transform(X[:, 4])
 X_test[:, 4] = labelencoder_embark.fit_transform(X_test[:, 4])
 
 train_onehotencoder = OneHotEncoder(categorical_features = [4])
@@ -64,7 +64,7 @@ X = train_onehotencoder.fit_transform(X).toarray()
 test_onehotencoder = OneHotEncoder(categorical_features = [4])
 X_test = test_onehotencoder.fit_transform(X_test).toarray()
 
-X = np.delete(X, 5, 1)
+X = np.delete(X, 4, 1)
 X_test = np.delete(X_test, 4, 1)
 
 # Splitting the dataset into the Training set and Test set
@@ -87,8 +87,8 @@ from keras.layers import Dense
 
 def build_classifier():
     classifier = Sequential()
-    classifier.add(Dense(units = 4, kernel_initializer = 'uniform', activation = 'relu', input_dim = 6))
-    classifier.add(Dense(units = 4, kernel_initializer = 'uniform', activation = 'relu'))
+    classifier.add(Dense(units = 5, kernel_initializer = 'uniform', activation = 'relu', input_dim = 8))
+    classifier.add(Dense(units = 5, kernel_initializer = 'uniform', activation = 'relu'))
     classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
     classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
     return classifier
@@ -96,7 +96,7 @@ def build_classifier():
 classifier = build_classifier()
 
 # Fitting the ANN to the Training Test set
-classifier.fit(X_train, y_train, batch_size = 10, epochs = 100)
+classifier.fit(X_train, y_train, batch_size = 25, epochs = 500)
 # Predicting the Test set results
 y_sub_test_pred = classifier.predict(X_sub_test)
 y_sub_test_pred = (y_sub_test_pred > 0.5)
